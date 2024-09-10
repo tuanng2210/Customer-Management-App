@@ -26,19 +26,19 @@ const App = () => {
   const [password, setPassword] = useState("");
 
   const handleDelete = () => {
-    console.log("Delete button clicked");
+    console.log("in OnDeleteClick()");
   };
 
   const handleSave = () => {
-    console.log("Save button clicked");
+    console.log("in OnSaveClick()");
   };
 
   const handleCancel = () => {
-    console.log("Cancel button clicked");
+    console.log("in OnCancelClick()");
   };
 
   const handleCustomerClick = (customer) => {
-    console.log("Customer clicked:", customer);
+    console.log("in handleListClick()", customer);
   };
 
   return (
@@ -49,7 +49,7 @@ const App = () => {
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Password</th> {/* Column for passwords */}
+            <th>Password</th> 
           </tr>
         </thead>
         <tbody>
@@ -61,7 +61,7 @@ const App = () => {
             >
               <td>{customer.name}</td>
               <td>{customer.email}</td>
-              <td>{customer.pass}</td> {/* Display password */}
+              <td>{customer.pass}</td>
             </tr>
           ))}
         </tbody>
