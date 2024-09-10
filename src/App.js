@@ -1,36 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Table, Card, Form, Button, Container } from "react-bootstrap";
+import { getAll, get, deleteById, post, put } from "./memdb";
 
 const App = () => {
-  const [customers, setCustomers] = useState([
-    {
-      id: 1,
-      name: "Tuan Nguyen",
-      email: "tuan.nguyen@example.com",
-      pass: "password123",
-    },
-    {
-      id: 2,
-      name: "Areeb Nabi",
-      email: "areeb.nabi@example.com",
-      pass: "mypassword",
-    },
-    {
-      id: 3,
-      name: "Kelsey Maratan",
-      email: "kelsey.maratan@example.com",
-      pass: "securepass",
-    },
-  ]);
+  const [customers, setCustomers] = useState([]);
 
   const blankCustomer = {
     id: -1,
     name: "",
     email: "",
-    pass: "",
+    password: "",
   };
 
   const [selectedCustomer, setSelectedCustomer] = useState(blankCustomer);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -38,11 +21,46 @@ const App = () => {
   });
 
   const handleDelete = () => {
-    console.log("Delete button clicked");
+    if (!selectedCustomer) return;
+
+    deleteById(selectedCustomer.id);
+    const updatedCustomers = customers.filter(
+      (customer) => customer.id !== selectedCustomer.id
+    );
+    setCustomers(updatedCustomers);
+    setSelectedCustomer(blankCustomer);
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+    });
   };
 
-  const handleSave = () => {
-    console.log("Save button clicked");
+  const handleSave = async () => {
+    if (selectedCustomer.id === -1) {
+      // "Add" mode
+      try {
+        await post(formData);
+        getCustomers();
+      } catch (error) {
+        console.error("Error adding customer:", error);
+      }
+    } else {
+      // "Update" mode
+      try {
+        await put(selectedCustomer.id, formData);
+        getCustomers();
+      } catch (error) {
+        console.error("Error updating customer:", error);
+      }
+    }
+    // Clear the form and de-select the customer
+    setSelectedCustomer(blankCustomer);
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+    });
   };
 
   const handleCancel = () => {
@@ -63,7 +81,7 @@ const App = () => {
       setFormData({
         name: customer.name,
         email: customer.email,
-        password: customer.pass,
+        password: customer.password,
       });
     }
   };
@@ -72,6 +90,19 @@ const App = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const getCustomers = async () => {
+    try {
+      const allCustomers = await getAll();
+      setCustomers(allCustomers);
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    }
+  };
+
+  useEffect(() => {
+    getCustomers();
+  }, []);
 
   return (
     <Container className="mt-5">
@@ -83,7 +114,7 @@ const App = () => {
               <tr>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Password</th> {/* Column for passwords */}
+                <th>Password</th>
               </tr>
             </thead>
             <tbody>
@@ -99,7 +130,7 @@ const App = () => {
                 >
                   <td>{customer.name}</td>
                   <td>{customer.email}</td>
-                  <td>{customer.pass}</td> {/* Display password */}
+                  <td>{customer.password}</td>
                 </tr>
               ))}
             </tbody>
@@ -110,7 +141,7 @@ const App = () => {
       <Card className="mt-5 mb-5">
         <Card.Body>
           <h1 className="mt-4 mb-3">
-            {selectedCustomer.id === -1 ? "Update Customer" : "Add Customer"}
+            {selectedCustomer.id === -1 ? "Add Customer" : "Update Customer"}
           </h1>
           <Form>
             <Form.Group controlId="formName">
