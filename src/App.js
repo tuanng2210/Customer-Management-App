@@ -37,6 +37,10 @@ const App = () => {
     console.log("Cancel button clicked");
   };
 
+  const handleCustomerClick = (customer) => {
+    console.log("Customer clicked:", customer);
+  };
+
   return (
     <div>
       <h1>Customer List</h1>
@@ -50,7 +54,11 @@ const App = () => {
         </thead>
         <tbody>
           {customers.map((customer) => (
-            <tr key={customer.id}>
+            <tr
+              key={customer.id}
+              onClick={() => handleCustomerClick(customer)}
+              style={{ cursor: "pointer" }}
+            >
               <td>{customer.name}</td>
               <td>{customer.email}</td>
               <td>{customer.pass}</td> {/* Display password */}
@@ -105,6 +113,6 @@ const App = () => {
       </form>
     </div>
   );
-}
+};
 
 export default App;
