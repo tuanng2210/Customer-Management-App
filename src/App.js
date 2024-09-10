@@ -38,18 +38,18 @@ const App = () => {
 
   const handleSave = async () => {
     if (selectedCustomer._id === null) {
-      // "Add" mode
+    // "Add" mode
       try {
         await post(formData);
-        getCustomers();
+        // getCustomers();
       } catch (error) {
         console.error("Error adding customer:", error);
       }
     } else {
-      // "Update" mode
+    // "Update" mode
       try {
         await put(selectedCustomer._id, formData);
-        getCustomers();
+        // getCustomers();
       } catch (error) {
         console.error("Error updating customer:", error);
       }
@@ -102,7 +102,7 @@ const App = () => {
 
   useEffect(() => {
     getCustomers();
-  }, []);
+  }, [customers]);
 
   return (
     <Container className="mt-5">
