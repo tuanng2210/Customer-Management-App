@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Table, Card, Form, Button, Container } from "react-bootstrap";
-import { getAll, get, deleteById, post, put } from "./memdb";
+import { getAll, deleteById, post, put } from "./utility/api";
 
 const App = () => {
   const [customers, setCustomers] = useState([]);
 
   const blankCustomer = {
-    id: -1,
+    _id: null,
     name: "",
     email: "",
     password: "",
@@ -23,9 +23,9 @@ const App = () => {
   const handleDelete = () => {
     if (!selectedCustomer) return;
 
-    deleteById(selectedCustomer.id);
+    deleteById(selectedCustomer._id);
     const updatedCustomers = customers.filter(
-      (customer) => customer.id !== selectedCustomer.id
+      (customer) => customer._id !== selectedCustomer._id
     );
     setCustomers(updatedCustomers);
     setSelectedCustomer(blankCustomer);
@@ -37,7 +37,7 @@ const App = () => {
   };
 
   const handleSave = async () => {
-    if (selectedCustomer.id === -1) {
+    if (selectedCustomer._id === null) {
       // "Add" mode
       try {
         await post(formData);
@@ -48,7 +48,7 @@ const App = () => {
     } else {
       // "Update" mode
       try {
-        await put(selectedCustomer.id, formData);
+        await put(selectedCustomer._id, formData);
         getCustomers();
       } catch (error) {
         console.error("Error updating customer:", error);
@@ -73,7 +73,7 @@ const App = () => {
   };
 
   const handleCustomerClick = (customer) => {
-    if (selectedCustomer?.id === customer.id) {
+    if (selectedCustomer?._id === customer._id) {
       setSelectedCustomer(blankCustomer);
       setFormData({ name: "", email: "", password: "" });
     } else {
@@ -120,12 +120,14 @@ const App = () => {
             <tbody>
               {customers.map((customer) => (
                 <tr
-                  key={customer.id}
+                  key={customer._id}
                   onClick={() => handleCustomerClick(customer)}
                   style={{
                     cursor: "pointer",
                     fontWeight:
-                      selectedCustomer?.id === customer.id ? "bold" : "normal",
+                      selectedCustomer?._id === customer._id
+                        ? "bold"
+                        : "normal",
                   }}
                 >
                   <td>{customer.name}</td>
@@ -141,7 +143,7 @@ const App = () => {
       <Card className="mt-5 mb-5">
         <Card.Body>
           <h1 className="mt-4 mb-3">
-            {selectedCustomer.id === -1 ? "Add Customer" : "Update Customer"}
+            {selectedCustomer._id === null ? "Add Customer" : "Update Customer"}
           </h1>
           <Form>
             <Form.Group controlId="formName">
