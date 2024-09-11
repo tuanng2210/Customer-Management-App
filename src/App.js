@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Table, Card, Form, Button, Container } from "react-bootstrap";
 import { getAll, deleteById, post, put } from "./utility/api";
+import CustomerList from "./components/CustomerList";
+import CustomerAddUpdateForm from "./components/CustomerAddUpdateForm";
 
 const App = () => {
   const [customers, setCustomers] = useState([]);
@@ -38,7 +40,7 @@ const App = () => {
 
   const handleSave = async () => {
     if (selectedCustomer._id === null) {
-    // "Add" mode
+      // "Add" mode
       try {
         await post(formData);
         // getCustomers();
@@ -46,7 +48,7 @@ const App = () => {
         console.error("Error adding customer:", error);
       }
     } else {
-    // "Update" mode
+      // "Update" mode
       try {
         await put(selectedCustomer._id, formData);
         // getCustomers();
@@ -105,93 +107,117 @@ const App = () => {
   }, [customers]);
 
   return (
+    // <Container className="mt-5">
+    //   <Card>
+    //     <Card.Body>
+    //       <h1 className="mb-4">Customer List</h1>
+    //       <Table striped bordered hover>
+    //         <thead>
+    //           <tr>
+    //             <th>Name</th>
+    //             <th>Email</th>
+    //             <th>Password</th>
+    //           </tr>
+    //         </thead>
+    //         <tbody>
+    //           {customers.map((customer) => (
+    //             <tr
+    //               key={customer._id}
+    //               onClick={() => handleCustomerClick(customer)}
+    //               style={{
+    //                 cursor: "pointer",
+    //                 fontWeight:
+    //                   selectedCustomer?._id === customer._id
+    //                     ? "bold"
+    //                     : "normal",
+    //               }}
+    //             >
+    //               <td>{customer.name}</td>
+    //               <td>{customer.email}</td>
+    //               <td>{customer.password}</td>
+    //             </tr>
+    //           ))}
+    //         </tbody>
+    //       </Table>
+    //     </Card.Body>
+    //   </Card>
+
+    //   <Card className="mt-5 mb-5">
+    //     <Card.Body>
+    //       <h1 className="mt-4 mb-3">
+    //         {selectedCustomer._id === null ? "Add Customer" : "Update Customer"}
+    //       </h1>
+    //       <Form>
+    //         <Form.Group controlId="formName">
+    //           <Form.Label>Name:</Form.Label>
+    //           <Form.Control
+    //             type="text"
+    //             name="name"
+    //             value={formData.name}
+    //             onChange={handleInputChange}
+    //           />
+    //         </Form.Group>
+
+    //         <Form.Group controlId="formEmail">
+    //           <Form.Label>Email:</Form.Label>
+    //           <Form.Control
+    //             type="email"
+    //             name="email"
+    //             value={formData.email}
+    //             onChange={handleInputChange}
+    //           />
+    //         </Form.Group>
+
+    //         <Form.Group controlId="formPassword">
+    //           <Form.Label>Password:</Form.Label>
+    //           <Form.Control
+    //             type="password"
+    //             name="password"
+    //             value={formData.password}
+    //             onChange={handleInputChange}
+    //           />
+    //         </Form.Group>
+
+    //         <div className="mt-3">
+    //           <Button variant="danger" onClick={handleDelete}>
+    //             Delete
+    //           </Button>
+    //           <Button variant="primary" className="ms-2" onClick={handleSave}>
+    //             Save
+    //           </Button>
+    //           <Button
+    //             variant="secondary"
+    //             className="ms-2"
+    //             onClick={handleCancel}
+    //           >
+    //             Cancel
+    //           </Button>
+    //         </div>
+    //       </Form>
+    //     </Card.Body>
+    //   </Card>
     <Container className="mt-5">
       <Card>
         <Card.Body>
           <h1 className="mb-4">Customer List</h1>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Password</th>
-              </tr>
-            </thead>
-            <tbody>
-              {customers.map((customer) => (
-                <tr
-                  key={customer._id}
-                  onClick={() => handleCustomerClick(customer)}
-                  style={{
-                    cursor: "pointer",
-                    fontWeight:
-                      selectedCustomer?._id === customer._id
-                        ? "bold"
-                        : "normal",
-                  }}
-                >
-                  <td>{customer.name}</td>
-                  <td>{customer.email}</td>
-                  <td>{customer.password}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          <CustomerList
+            customers={customers}
+            selectedCustomer={selectedCustomer}
+            onCustomerClick={handleCustomerClick}
+          />
         </Card.Body>
       </Card>
 
       <Card className="mt-5 mb-5">
         <Card.Body>
-          <h1 className="mt-4 mb-3">
-            {selectedCustomer._id === null ? "Add Customer" : "Update Customer"}
-          </h1>
-          <Form>
-            <Form.Group controlId="formName">
-              <Form.Label>Name:</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formEmail">
-              <Form.Label>Email:</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formPassword">
-              <Form.Label>Password:</Form.Label>
-              <Form.Control
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-
-            <div className="mt-3">
-              <Button variant="danger" onClick={handleDelete}>
-                Delete
-              </Button>
-              <Button variant="primary" className="ms-2" onClick={handleSave}>
-                Save
-              </Button>
-              <Button
-                variant="secondary"
-                className="ms-2"
-                onClick={handleCancel}
-              >
-                Cancel
-              </Button>
-            </div>
-          </Form>
+          <CustomerAddUpdateForm
+            formData={formData}
+            selectedCustomer={selectedCustomer}
+            handleInputChange={handleInputChange}
+            handleSave={handleSave}
+            handleDelete={handleDelete}
+            handleCancel={handleCancel}
+          />
         </Card.Body>
       </Card>
     </Container>
