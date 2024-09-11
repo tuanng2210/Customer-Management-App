@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Card, Form, Button, Container } from "react-bootstrap";
+import { Card, Container } from "react-bootstrap";
 import { getAll, deleteById, post, put } from "./utility/api";
 import CustomerList from "./components/CustomerList";
 import CustomerAddUpdateForm from "./components/CustomerAddUpdateForm";
