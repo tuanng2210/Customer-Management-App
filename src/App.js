@@ -43,7 +43,6 @@ const App = () => {
       // "Add" mode
       try {
         await post(formData);
-        // getCustomers();
       } catch (error) {
         console.error("Error adding customer:", error);
       }
@@ -51,7 +50,6 @@ const App = () => {
       // "Update" mode
       try {
         await put(selectedCustomer._id, formData);
-        // getCustomers();
       } catch (error) {
         console.error("Error updating customer:", error);
       }
