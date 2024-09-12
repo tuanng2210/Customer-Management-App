@@ -22,45 +22,47 @@ const App = () => {
     password: "",
   });
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!selectedCustomer) return;
 
-    deleteById(selectedCustomer._id);
-    const updatedCustomers = customers.filter(
-      (customer) => customer._id !== selectedCustomer._id
-    );
-    setCustomers(updatedCustomers);
-    setSelectedCustomer(blankCustomer);
-    setFormData({
-      name: "",
-      email: "",
-      password: "",
-    });
+    try {
+      await deleteById(selectedCustomer._id);
+      const updatedCustomers = customers.filter(
+        (customer) => customer._id !== selectedCustomer._id
+      );
+      setCustomers(updatedCustomers);
+      setSelectedCustomer(blankCustomer);
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+      });
+    } catch (error) {
+      console.error("Error deleting customer:", error);
+    }
   };
 
   const handleSave = async () => {
-    if (selectedCustomer._id === null) {
-      // "Add" mode
-      try {
+    try {
+      if (selectedCustomer._id === null) {
+        // "Add" mode
         await post(formData);
-      } catch (error) {
-        console.error("Error adding customer:", error);
-      }
-    } else {
-      // "Update" mode
-      try {
+      } else {
+        // "Update" mode
         await put(selectedCustomer._id, formData);
-      } catch (error) {
-        console.error("Error updating customer:", error);
       }
+      // Clear the form and de-select the customer
+      setSelectedCustomer(blankCustomer);
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+      });
+      // Refresh the customer list
+      getCustomers();
+    } catch (error) {
+      console.error("Error saving customer:", error);
     }
-    // Clear the form and de-select the customer
-    setSelectedCustomer(blankCustomer);
-    setFormData({
-      name: "",
-      email: "",
-      password: "",
-    });
   };
 
   const handleCancel = () => {
@@ -102,7 +104,7 @@ const App = () => {
 
   useEffect(() => {
     getCustomers();
-  }, [customers]);
+  }, []);
 
   return (
     <Container className="mt-5">
