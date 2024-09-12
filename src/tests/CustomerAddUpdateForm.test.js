@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import CustomerAddUpdateForm from "../CustomerAddUpdateForm";
+import CustomerAddUpdateForm from "../components/CustomerAddUpdateForm";
 import "@testing-library/jest-dom/extend-expect";
 import { act } from "react";
 

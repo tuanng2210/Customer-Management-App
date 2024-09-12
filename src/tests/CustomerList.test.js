@@ -1,13 +1,18 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import CustomerList from "../CustomerList";
+import CustomerList from "../components/CustomerList";
 import "@testing-library/jest-dom/extend-expect";
-import { act } from "react"; 
+import { act } from "react";
 
 describe("CustomerList", () => {
   const customers = [
     { _id: "1", name: "John Doe", email: "john@example.com", password: "123" },
-    { _id: "2", name: "Jane Smith", email: "jane@example.com", password: "456" },
+    {
+      _id: "2",
+      name: "Jane Smith",
+      email: "jane@example.com",
+      password: "456",
+    },
   ];
 
   const defaultProps = {
