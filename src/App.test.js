@@ -12,6 +12,8 @@ jest.mock("./utility/api", () => ({
 }));
 
 describe("App Component", () => {
+
+  // Mock data to simulate API responses
   const mockCustomers = [
     { _id: "1", name: "John Doe", email: "john@example.com", password: "1234" },
     {
@@ -22,13 +24,16 @@ describe("App Component", () => {
     },
   ];
 
+  // Before each test, mock the getAll API function to return the mockCustomers
   beforeEach(() => {
     getAll.mockResolvedValue(mockCustomers);
   });
 
+   // Test that the customer list is rendered correctly
   test("renders customer list", async () => {
     render(<App />);
 
+    // Check if the "Customer List" title is present
     expect(await screen.findByText("Customer List")).toBeInTheDocument();
 
     // Wait for the customers to be loaded and displayed
@@ -38,6 +43,7 @@ describe("App Component", () => {
     });
   });
 
+  // Test that selecting a customer updates the form fields
   test("handles customer selection", async () => {
     render(<App />);
 
@@ -55,6 +61,7 @@ describe("App Component", () => {
     expect(screen.getByDisplayValue("john@example.com")).toBeInTheDocument();
   });
 
+   // Test that adding a new customer works correctly
   test("handles adding a new customer", async () => {
     render(<App />);
 
@@ -77,6 +84,7 @@ describe("App Component", () => {
       password: "password",
     });
 
+    // Click the Save button to submit the form
     fireEvent.click(screen.getByText(/save/i));
 
     // Check if the post function was called
@@ -89,6 +97,7 @@ describe("App Component", () => {
     });
   });
 
+  // Test that updating an existing customer's details works correctly  
   test("handles updating an existing customer", async () => {
     render(<App />);
 
@@ -115,6 +124,7 @@ describe("App Component", () => {
       password: "1234",
     });
 
+    // Click the Save button to submit the form
     fireEvent.click(screen.getByText(/save/i));
 
     // Check if the put function was called with updated data
@@ -127,6 +137,7 @@ describe("App Component", () => {
     });
   });
 
+  // Test that deleting a customer works correctly
   test("handles deleting a customer", async () => {
     render(<App />);
 
@@ -155,6 +166,7 @@ describe("App Component", () => {
     });
   });
 
+  // Test that the cancel operation clears the form
   test("handles cancel operation", async () => {
     render(<App />);
 
