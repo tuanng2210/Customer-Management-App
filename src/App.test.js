@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import App from "./App";
 import { getAll, deleteById, post, put } from "./utility/api";
+import { act } from "react";
 
 // Mocking API functions
 jest.mock("./utility/api", () => ({
@@ -44,7 +45,9 @@ describe("App Component", () => {
 
   // Test that the form is rendered in the app correctly
   test("renders the CustomerAddUpdateForm", async () => {
-    render(<App />);
+    await act(async () => {
+      render(<App />);
+    });
 
     // Ensure the form is rendered with the correct fields and buttons
     expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
