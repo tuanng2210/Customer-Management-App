@@ -12,7 +12,6 @@ jest.mock("./utility/api", () => ({
 }));
 
 describe("App Component", () => {
-
   // Mock data to simulate API responses
   const mockCustomers = [
     { _id: "1", name: "John Doe", email: "john@example.com", password: "1234" },
@@ -29,7 +28,7 @@ describe("App Component", () => {
     getAll.mockResolvedValue(mockCustomers);
   });
 
-   // Test that the customer list is rendered correctly
+  // Test that the customer list is rendered correctly
   test("renders customer list", async () => {
     render(<App />);
 
@@ -41,6 +40,19 @@ describe("App Component", () => {
       expect(screen.getByText("John Doe")).toBeInTheDocument();
       expect(screen.getByText("Jane Smith")).toBeInTheDocument();
     });
+  });
+
+  // Test that the form is rendered in the app correctly
+  test("renders the CustomerAddUpdateForm", async () => {
+    render(<App />);
+
+    // Ensure the form is rendered with the correct fields and buttons
+    expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    expect(screen.getByText(/save/i)).toBeInTheDocument();
+    expect(screen.getByText(/delete/i)).toBeInTheDocument();
+    expect(screen.getByText(/cancel/i)).toBeInTheDocument();
   });
 
   // Test that selecting a customer updates the form fields
@@ -61,7 +73,7 @@ describe("App Component", () => {
     expect(screen.getByDisplayValue("john@example.com")).toBeInTheDocument();
   });
 
-   // Test that adding a new customer works correctly
+  // Test that adding a new customer works correctly
   test("handles adding a new customer", async () => {
     render(<App />);
 
@@ -97,7 +109,7 @@ describe("App Component", () => {
     });
   });
 
-  // Test that updating an existing customer's details works correctly  
+  // Test that updating an existing customer's details works correctly
   test("handles updating an existing customer", async () => {
     render(<App />);
 
